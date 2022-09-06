@@ -1,0 +1,31 @@
+version: "3"
+
+networks:
+  api_server:
+    driver: bridge
+
+services:
+  node:
+    platform: linux/arm64 
+    container_name: node
+    image: nodes.core.image
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: node_image
+    volumes:
+      - ${DIR_NODE_APP}:/usr/src/app/app
+      - /usr/src/app/node_modules
+    networks:
+      - api_server
+    depends_on:
+      - front
+      - back
+    ports:
+      - 5001:5002
+    restart: always
+    command: npm run start
+
+
+volumes:
+  mariadb-volumen: # unchanged
